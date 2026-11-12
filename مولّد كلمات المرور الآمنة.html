@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>مولّد كلمات المرور الآمنة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#eef2f9;--glow1:rgba(13,148,136,.18);--glow2:rgba(99,102,241,.16);
+  --card:#ffffff;--text:#0f172a;--muted:#64748b;--line:#e3e8f1;--field:#f3f6fb;
+  --accent:#0d9488;--accent2:#2563eb;--on-accent:#ffffff;--shadow:0 30px 80px -30px rgba(15,23,42,.35);
+  --plate:#0b1220;--p-let:#eaf0fa;--p-num:#5eead4;--p-sym:#c4b5fd;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#060912;--glow1:rgba(45,212,191,.16);--glow2:rgba(99,102,241,.22);
+    --card:#0d1322;--text:#eaf0fa;--muted:#8b98b3;--line:#1b2540;--field:#111a2e;
+    --accent:#2dd4bf;--accent2:#3b82f6;--on-accent:#04121a;--shadow:0 40px 90px -30px rgba(0,0,0,.8);
+    --plate:#070c18;color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#060912;--glow1:rgba(45,212,191,.16);--glow2:rgba(99,102,241,.22);
+  --card:#0d1322;--text:#eaf0fa;--muted:#8b98b3;--line:#1b2540;--field:#111a2e;
+  --accent:#2dd4bf;--accent2:#3b82f6;--on-accent:#04121a;--shadow:0 40px 90px -30px rgba(0,0,0,.8);
+  --plate:#070c18;color-scheme:dark;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;color:var(--text);font-family:"Readex Pro",system-ui,Tahoma,sans-serif;
+  background:radial-gradient(700px 420px at 90% 0%,var(--glow2),transparent 70%),radial-gradient(640px 420px at 5% 100%,var(--glow1),transparent 70%),var(--bg);
+  display:flex;justify-content:center;align-items:center;padding:24px 16px}
+.shell{width:100%;max-width:780px;background:var(--card);border:1px solid var(--line);border-radius:28px;box-shadow:var(--shadow);overflow:hidden}
+.bar{display:flex;align-items:center;justify-content:space-between;padding:20px 26px;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:14px}
+.mark{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:var(--on-accent);
+  background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 8px 20px -8px var(--accent)}
+.mark svg{width:23px;height:23px}
+h1{margin:0;font-size:1.15rem;font-weight:600}
+.sub{margin:2px 0 0;font-size:.8rem;color:var(--muted);font-weight:300}
+.mode{width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:var(--field);color:var(--text);cursor:pointer;display:grid;place-items:center}
+.mode svg{width:18px;height:18px}
+.hero{padding:26px}
+.plate{background:var(--plate);border-radius:20px;padding:26px 24px 22px;position:relative;overflow:hidden;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.07)}
+.plate::before{content:"";position:absolute;width:340px;height:340px;top:-200px;inset-inline-end:-90px;border-radius:50%;
+  background:radial-gradient(circle,rgba(45,212,191,.22),transparent 65%);pointer-events:none}
+.pw{position:relative;direction:ltr;text-align:left;font-family:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;font-weight:700;
+  font-size:clamp(1.35rem,4.6vw,2rem);line-height:1.5;letter-spacing:.04em;overflow-wrap:anywhere;word-break:break-all;min-height:3em;color:var(--p-let)}
+.pw .n{color:var(--p-num)}.pw .s{color:var(--p-sym)}
+.acts{position:relative;display:flex;gap:10px;margin-top:18px}
+.btn{height:50px;border:0;border-radius:14px;font-family:inherit;font-weight:600;font-size:.98rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;transition:transform .12s,filter .15s}
+.btn:hover{filter:brightness(1.06)}.btn:active{transform:scale(.98)}
+.btn svg{width:19px;height:19px}
+.copy{flex:1;color:var(--on-accent);background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 10px 24px -10px var(--accent)}
+.copy.done{background:#22c55e;color:#04210e;box-shadow:none}
+.regen{padding:0 20px;background:rgba(255,255,255,.07);color:#eaf0fa;border:1px solid rgba(255,255,255,.14)}
+.regen svg{transition:transform .5s}.regen.spin svg{transform:rotate(360deg)}
+.grid{display:grid;grid-template-columns:230px 1fr;gap:26px;padding:4px 26px 26px}
+.gauge{background:var(--field);border:1px solid var(--line);border-radius:20px;padding:22px 16px;text-align:center}
+.ring{position:relative;width:136px;height:136px;margin:0 auto 14px}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:9;stroke-linecap:round}
+.ring .tr{stroke:var(--line)}
+.ring .pr{stroke:var(--rc,var(--accent));stroke-dasharray:326.7;stroke-dashoffset:326.7;transition:stroke-dashoffset .6s cubic-bezier(.3,.9,.3,1),stroke .3s}
+.ring .c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring b{font-family:"JetBrains Mono",monospace;font-size:1.9rem;line-height:1}
+.ring span{font-size:.72rem;color:var(--muted);margin-top:3px}
+.lvl{font-weight:600;font-size:1.05rem}
+.crack{font-size:.8rem;color:var(--muted);margin-top:6px;font-weight:300;line-height:1.6}
+.set{display:flex;flex-direction:column;gap:16px;justify-content:center}
+.lh{display:flex;align-items:center;justify-content:space-between;font-weight:500}
+.lv{font-family:"JetBrains Mono",monospace;font-weight:700;font-size:1.1rem;color:var(--accent);background:var(--field);border:1px solid var(--line);border-radius:10px;padding:3px 12px}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:99px;outline:0;margin:6px 0 0;
+  background:linear-gradient(to left,var(--accent) var(--p,25%),var(--line) var(--p,25%))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:#fff;border:5px solid var(--accent);cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,.3)}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:#fff;border:5px solid var(--accent);cursor:pointer}
+.opts{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.opt{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;cursor:pointer;font-size:.92rem;font-weight:400}
+.opt+.opt{border-top:1px solid var(--line)}
+.opt em{font-style:normal;font-family:"JetBrains Mono",monospace;font-size:.78rem;color:var(--muted);margin-inline-start:10px;direction:ltr;display:inline-block}
+.opt input{position:absolute;opacity:0;pointer-events:none}
+.sw{width:42px;height:24px;border-radius:99px;background:var(--line);position:relative;flex:none;transition:background .2s}
+.sw::after{content:"";position:absolute;top:3px;inset-inline-start:3px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.3);transition:transform .2s}
+input:checked+.sw{background:var(--accent)}
+input:checked+.sw::after{transform:translateX(-18px)}
+input:focus-visible+.sw,button:focus-visible,input[type=range]:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.foot{display:flex;flex-wrap:wrap;gap:8px 22px;justify-content:center;padding:16px 26px;border-top:1px solid var(--line);background:var(--field);color:var(--muted);font-size:.78rem;font-weight:300}
+.foot span{display:flex;align-items:center;gap:7px}
+.foot svg{width:15px;height:15px;color:var(--accent)}
+.msg{position:fixed;inset-inline:0;bottom:calc(20px + env(safe-area-inset-bottom,0px));text-align:center;pointer-events:none;font-size:.85rem}
+@media (max-width:640px){.grid{grid-template-columns:1fr}.hero,.bar{padding-inline:18px}.grid{padding-inline:18px}.gauge{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center;text-align:start}.ring{margin:0}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main class="shell">
+  <div class="bar">
+    <div class="brand">
+      <div class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 4.6-3.2 8-8 9-4.8-1-8-4.4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg></div>
+      <div><h1>مولّد كلمات المرور</h1><p class="sub">كلمات مرور قوية وعشوائية في ثوانٍ</p></div>
+    </div>
+    <button class="mode" id="theme" aria-label="تبديل الوضع الفاتح والداكن"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+  </div>
+
+  <section class="hero">
+    <div class="plate">
+      <div class="pw" id="pw" aria-live="polite"></div>
+      <div class="acts">
+        <button class="btn copy" id="copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg><span id="ct">نسخ كلمة المرور</span></button>
+        <button class="btn regen" id="gen" aria-label="توليد كلمة مرور جديدة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 0 0-14.5-4M4 4v4h4"/><path d="M4 13a8 8 0 0 0 14.5 4M20 20v-4h-4"/></svg>توليد جديدة</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="grid">
+    <div class="gauge">
+      <div class="ring">
+        <svg viewBox="0 0 120 120" aria-hidden="true"><circle class="tr" cx="60" cy="60" r="52"/><circle class="pr" id="pr" cx="60" cy="60" r="52"/></svg>
+        <div class="c"><b id="bits">0</b><span>بت</span></div>
+      </div>
+      <div>
+        <div class="lvl" id="label">—</div>
+        <div class="crack" id="crack"></div>
+      </div>
+    </div>
+
+    <div class="set">
+      <div>
+        <div class="lh"><span>طول كلمة المرور</span><span class="lv" id="lenv">16</span></div>
+        <input type="range" id="len" min="6" max="64" value="16" aria-label="طول كلمة المرور">
+      </div>
+      <div class="opts">
+        <label class="opt"><span>حروف كبيرة<em>A-Z</em></span><input type="checkbox" id="up" checked><span class="sw"></span></label>
+        <label class="opt"><span>حروف صغيرة<em>a-z</em></span><input type="checkbox" id="lo" checked><span class="sw"></span></label>
+        <label class="opt"><span>أرقام<em>0-9</em></span><input type="checkbox" id="nu" checked><span class="sw"></span></label>
+        <label class="opt"><span>رموز<em>!@#$</em></span><input type="checkbox" id="sy" checked><span class="sw"></span></label>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>تُولَّد على جهازك فقط</span>
+    <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>عشوائية تشفيرية حقيقية</span>
+    <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>لا يتم حفظ أو إرسال أي شيء</span>
+  </div>
+</main>
+<div class="msg" id="msg" role="status"></div>
+
+<script>
+(function(){
+  var SETS={up:"ABCDEFGHIJKLMNOPQRSTUVWXYZ",lo:"abcdefghijklmnopqrstuvwxyz",nu:"0123456789",sy:"!@#$%^&*()-_=+[]{};:,.?"};
+  var $=function(id){return document.getElementById(id)};
+  var current="",timer=null,C=326.7;
+  var reduce=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function rnd(n){
+    var max=Math.floor(4294967296/n)*n,a=new Uint32Array(1);
+    do{crypto.getRandomValues(a)}while(a[0]>=max);
+    return a[0]%n;
+  }
+  function cls(ch){return /[0-9]/.test(ch)?"n":/[A-Za-z]/.test(ch)?"l":"s"}
+  function esc(ch){return ch==="&"?"&amp;":ch==="<"?"&lt;":ch===">"?"&gt;":ch}
+  function render(str){
+    var h="";
+    for(var i=0;i<str.length;i++)h+='<span class="'+cls(str[i])+'">'+esc(str[i])+"</span>";
+    $("pw").innerHTML=h;
+  }
+  function scramble(final,animate){
+    clearInterval(timer);
+    if(!animate||reduce){render(final);return}
+    var step=0,total=9,all=SETS.up+SETS.lo+SETS.nu+SETS.sy;
+    timer=setInterval(function(){
+      step++;var s="";
+      for(var i=0;i<final.length;i++)s+=(i/final.length<step/total)?final[i]:all[rnd(all.length)];
+      render(s);
+      if(step>=total){clearInterval(timer);render(final)}
+    },30);
+  }
+
+  function generate(animate){
+    var keys=Object.keys(SETS).filter(function(k){return $(k).checked});
+    if(!keys.length){$("lo").checked=true;keys=["lo"]}
+    var len=+$("len").value,pool=keys.map(function(k){return SETS[k]}).join("");
+    var out=keys.map(function(k){return SETS[k][rnd(SETS[k].length)]});
+    while(out.length<len){out.push(pool[rnd(pool.length)])}
+    out=out.slice(0,len);
+    for(var i=out.length-1;i>0;i--){var j=rnd(i+1),t=out[i];out[i]=out[j];out[j]=t}
+    current=out.join("");
+    scramble(current,animate);
+    strength(len,pool.length);
+  }
+
+  function crack(bits){
+    var s=Math.pow(2,bits-1)/1e10,y=s/31557600;
+    if(s<1)return "تُخمَّن فوراً";
+    if(s<60)return "تُخمَّن خلال "+Math.round(s)+" ثانية";
+    if(s<3600)return "تُخمَّن خلال "+Math.round(s/60)+" دقيقة";
+    if(s<86400)return "تُخمَّن خلال "+Math.round(s/3600)+" ساعة";
+    if(s<31557600)return "تُخمَّن خلال "+Math.round(s/86400)+" يوماً";
+    if(y>1e9)return "تحتاج أكثر من مليار سنة للتخمين";
+    if(y>1e6)return "تحتاج ملايين السنين للتخمين";
+    if(y>1e3)return "تحتاج آلاف السنين للتخمين";
+    return "تحتاج نحو "+Math.round(y)+" سنة للتخمين";
+  }
+
+  function strength(len,pool){
+    var bits=Math.round(len*Math.log2(pool)),l,c;
+    if(bits<40){l="ضعيفة";c="#ef4444"}
+    else if(bits<60){l="متوسطة";c="#f59e0b"}
+    else if(bits<85){l="قوية";c="#22c55e"}
+    else if(bits<110){l="قوية جداً";c="#14b8a6"}
+    else{l="حصينة";c="#06b6d4"}
+    var pct=Math.min(1,bits/128);
+    var pr=$("pr");pr.style.setProperty("--rc",c);pr.style.strokeDashoffset=(C*(1-pct)).toFixed(1);
+    $("bits").textContent=bits;
+    $("label").textContent=l;$("label").style.color=c;
+    $("crack").textContent=crack(bits);
+  }
+
+  function flash(t){var m=$("msg");m.textContent=t;setTimeout(function(){m.textContent=""},2000)}
+
+  $("copy").onclick=function(){
+    var b=this;
+    function ok(){b.classList.add("done");$("ct").textContent="تم النسخ";setTimeout(function(){b.classList.remove("done");$("ct").textContent="نسخ كلمة المرور"},1600)}
+    function fb(){
+      var ta=document.createElement("textarea");ta.value=current;document.body.appendChild(ta);ta.select();
+      try{document.execCommand("copy");ok()}catch(e){flash("تعذّر النسخ، انسخها يدوياً")}
+      document.body.removeChild(ta);
+    }
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(current).then(ok,fb)}else fb();
+  };
+
+  function fill(){var r=$("len");r.style.setProperty("--p",((r.value-r.min)/(r.max-r.min)*100)+"%")}
+  $("len").oninput=function(){$("lenv").textContent=this.value;fill();generate(false)};
+  ["up","lo","nu","sy"].forEach(function(k){$(k).onchange=function(){generate(true)}});
+  $("gen").onclick=function(){var b=this;b.classList.remove("spin");void b.offsetWidth;b.classList.add("spin");generate(true)};
+
+  function setTheme(t){document.documentElement.setAttribute("data-theme",t);try{localStorage.setItem("theme",t)}catch(e){}}
+  $("theme").onclick=function(){
+    var cur=document.documentElement.getAttribute("data-theme");
+    if(!cur)cur=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";
+    setTheme(cur==="dark"?"light":"dark");
+  };
+  try{var s=localStorage.getItem("theme");if(s)document.documentElement.setAttribute("data-theme",s)}catch(e){}
+
+  fill();generate(true);
+})();
+</script>
+</body>
+</html>
